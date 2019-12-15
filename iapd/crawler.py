@@ -15,7 +15,7 @@ from requests import HTTPError
 
 class IAPDSession(requests.Session):
 
-    def __init__(self, min_delay_time=1.5, max_delay_time=2.5, timeout=60):
+    def __init__(self, min_delay_time=1.5, max_delay_time=2.5, timeout=30):
         super().__init__()
         self._min_delay_time = min_delay_time
         self._max_delay_time = max_delay_time
@@ -38,7 +38,7 @@ class IAPDSession(requests.Session):
             process_time = time.time() - self._last_request_time
             if process_time < delay_time:
                 sleep_time = delay_time - process_time
-                self._logger.debug('Request delayed for %ss.' % sleep_time)
+                self._logger.debug('Delaying request for {}s.'.format(sleep_time))
                 time.sleep(sleep_time)
 
 
@@ -47,7 +47,6 @@ class IAPDError(Exception):
 
 
 class IAPD(object):
-
     HEADERS = {
         'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
         'accept-encoding': 'gzip, deflate, br',
@@ -80,7 +79,7 @@ class IAPD(object):
     ADDRESS_ID_PATTERN = re.compile(r'ctl00_cphMain_rptrSearchResult_ctl\d{2,}_uc(Firm|Indvl)Item_divAddress')
     TYPE_PATTERN = re.compile(r'ctl00_cphMain_rptrSearchResult_ctl\d{2,}_uc(Firm|Indvl)Item_div\w{2,4}$')
     STATUS_PATTERN = re.compile(r'ctl00_cphMain_rptrSearchResult_ctl\d{2,}_uc(Firm|Indvl)Item_div\w{2,4}'
-                                          r'(Inactive|NotLicensed)')
+                                r'(Inactive|NotLicensed)')
     SCOPES = {
         'individual': 'rdoIndvl',
         'firm': 'rdoFirm'
@@ -99,15 +98,15 @@ class IAPD(object):
             ['__VIEWSTATE', '__VIEWSTATEGENERATOR', '__EVENTVALIDATION'])
 
         data = {
-                '__EVENTTARGET': 'ctl00$cphMain$sbox$searchBtn',
-                '__VIEWSTATE': view_state,
-                '__VIEWSTATEGENERATOR': view_state_generator,
-                '__EVENTVALIDATION': event_validation,
-                'ctl00$cphMain$sbox$searchScope': scope,
-                'ctl00$cphMain$sbox$txt{}'.format(scope[3:]): term,
-                'ctl00$cphMain$sbox$ddlZipRange': zip_code_range,
-                'ctl00$cphMain$sbox$txtZip': zip_code,
-                'ctl00$cphMain$sbox$txtAtFirm': at_firm
+            '__EVENTTARGET': 'ctl00$cphMain$sbox$searchBtn',
+            '__VIEWSTATE': view_state,
+            '__VIEWSTATEGENERATOR': view_state_generator,
+            '__EVENTVALIDATION': event_validation,
+            'ctl00$cphMain$sbox$searchScope': scope,
+            'ctl00$cphMain$sbox$txt{}'.format(scope[3:]): term,
+            'ctl00$cphMain$sbox$ddlZipRange': zip_code_range,
+            'ctl00$cphMain$sbox$txtZip': zip_code,
+            'ctl00$cphMain$sbox$txtAtFirm': at_firm
         }
         return data
 
@@ -149,7 +148,7 @@ class IAPD(object):
                 raise IAPDError('Download failed: {}'.format(url))
         return local_path
 
-    def search(self, term, scope='firm', zip_code=None, zip_code_range='5', at_firm=None,  iadp_only=False):
+    def search(self, term, scope='firm', zip_code=None, zip_code_range='5', at_firm=None, iadp_only=False):
         """
         Search for firm or individual on https://adviserinfo.sec.gov
         Args:
@@ -272,7 +271,7 @@ class IAPD(object):
             part_2_brochures_href = self._get_adv_two_from_brochures_url(self.BASE_URL + part_2_brochures_href)
 
         adv_form, part_2_brochures = map(
-            lambda href: self.BASE_URL + href if href else "", [adv_one_href, part_2_brochures_href])
+            lambda href: self.BASE_URL + href if href else None, [adv_one_href, part_2_brochures_href])
 
         if download:
             adv_form_local_path = self._download_form(url=adv_form,
