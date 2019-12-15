@@ -3,7 +3,7 @@
 A script to search and download data from the Investment Adviser Public Disclosure website (https://adviserinfo.sec.gov/)
 
 Example: 
-
+```
 import logging
 
 from iapd.crawler import IAPD
@@ -27,3 +27,4 @@ def get_filings(crd):
                                        download=True,
                                        output_dir='path/to/output/dir')   
     return filings
+```
