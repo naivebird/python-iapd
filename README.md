@@ -1,6 +1,6 @@
 # python-iapd
 
-A script to search and download data from the Investment Adviser Public Disclosure website (https://adviserinfo.sec.gov/)
+A script to search and download firm/indivudual data from the Investment Adviser Public Disclosure website (https://adviserinfo.sec.gov/).
 
 Example: 
 ```
@@ -9,7 +9,7 @@ import logging
 from iapd.crawler import IAPD
 from iapd.utils import crawler_retry
 
-logging.basicConfig(level=logging.basicConfig())
+logging.basicConfig(level=logging.DEBUG)
 
 
 def search_firm(name):
