@@ -1,6 +1,6 @@
 # python-iapd
 
-python-iapd is a script to search and download firm/indivudual data from the Investment Adviser Public Disclosure website (https://adviserinfo.sec.gov/).
+python-iapd is a script created to search and download firm/individual data from the Investment Adviser Public Disclosure website (https://adviserinfo.sec.gov/).
 
 ## Installation
 
