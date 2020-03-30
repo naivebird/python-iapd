@@ -1,9 +1,18 @@
 # python-iapd
 
-A script to search and download firm/indivudual data from the Investment Adviser Public Disclosure website (https://adviserinfo.sec.gov/).
+python-iapd is a script to search and download firm/indivudual data from the Investment Adviser Public Disclosure website (https://adviserinfo.sec.gov/).
 
-Example: 
+## Installation
+
+```bash
+git clone git@github.com:naivebird/python-iapd.git
+cd python-iapd
+pip install -r requirements.txt
 ```
+
+## Usage
+
+```python
 import logging
 
 from iapd.crawler import IAPD
@@ -28,3 +37,11 @@ def get_filings(crd):
                                        output_dir='path/to/output/dir')   
     return filings
 ```
+
+## Contributing
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
+Please make sure to update tests as appropriate.
+
+## License
+[MIT](https://choosealicense.com/licenses/mit/)
